@@ -1,13 +1,13 @@
 <?php
 
-use App\Http\Controllers\owner\Auth\AuthenticatedSessionController;
-use App\Http\Controllers\owner\Auth\ConfirmablePasswordController;
-use App\Http\Controllers\owner\Auth\EmailVerificationNotificationController;
-use App\Http\Controllers\owner\Auth\EmailVerificationPromptController;
-use App\Http\Controllers\owner\Auth\NewPasswordController;
-use App\Http\Controllers\owner\Auth\PasswordResetLinkController;
-use App\Http\Controllers\owner\Auth\RegisteredUserController;
-use App\Http\Controllers\owner\Auth\VerifyEmailController;
+use App\Http\Controllers\Owner\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Owner\Auth\ConfirmablePasswordController;
+use App\Http\Controllers\Owner\Auth\EmailVerificationNotificationController;
+use App\Http\Controllers\Owner\Auth\EmailVerificationPromptController;
+use App\Http\Controllers\Owner\Auth\NewPasswordController;
+use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
+use App\Http\Controllers\Owner\Auth\RegisteredUserController;
+use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 use Illuminate\Support\Facades\Route;
 
 /*
