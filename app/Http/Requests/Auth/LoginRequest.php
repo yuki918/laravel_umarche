@@ -45,7 +45,20 @@ class LoginRequest extends FormRequest
     {
         $this->ensureIsNotRateLimited();
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // 受診リクエストがadminの関連ページだった場合に、変数guardをadminにする
+        // 変数guardには、config\auth.phpで定義したguard配列の値を設定する
+        if($this->routeIs("admin.*")) {
+            $guard = "admins";
+        } elseif($this->routeIs("owner.*")) {
+            $gurad = "owners";
+        } else {
+            $gurad = "users";
+        }
+
+        // 初期値
+        // if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
+        // 
+        if (! Auth::guard($guard)->attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
             throw ValidationException::withMessages([
