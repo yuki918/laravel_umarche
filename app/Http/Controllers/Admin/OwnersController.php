@@ -9,6 +9,9 @@ use App\Models\Owner;
 // クエリビルダー
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Hash;
+// パスワードのバリデーション
+use Illuminate\Validation\Rules;
 
 class OwnersController extends Controller
 {
@@ -64,7 +67,22 @@ class OwnersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // オーナーを登録するときのバリデーション
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
+            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+        ]);
+        // リクエストされたオーナー情報を登録する
+        Owner::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        // リダイレクト処理
+        return redirect()
+          ->route("admin.owners.index")
+          ->with("message","オーナー登録が完了しました");
     }
 
     /**

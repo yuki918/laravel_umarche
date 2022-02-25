@@ -1,8 +1,6 @@
 <x-app-layout>
   <x-slot name="header">
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-          オーナー一覧
-      </h2>
+      <h2 class="font-semibold text-xl text-gray-800 leading-tight">オーナー一覧</h2>
   </x-slot>
 
   <div class="py-12">
@@ -35,6 +33,7 @@
                   @endforeach --}}
                   <section class="text-gray-600 body-font">
                     <div class="container px-5 py-6 mx-auto">
+                      <x-flash-message status="info" />
                       <div class="text-right">
                         <a href="/admin/owners/create" class="inline-block text-white bg-red-500 border-0 py-2 px-8 mb-8 mr-auto focus:outline-none hover:bg-red-600 rounded text-lg">新規登録</a>
                       </div>
