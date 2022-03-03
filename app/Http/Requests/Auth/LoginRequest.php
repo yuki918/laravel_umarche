@@ -50,9 +50,9 @@ class LoginRequest extends FormRequest
         if($this->routeIs("admin.*")) {
             $guard = "admins";
         } elseif($this->routeIs("owner.*")) {
-            $gurad = "owners";
+            $guard = "owners";
         } else {
-            $gurad = "users";
+            $guard = "users";
         }
 
         // 初期値

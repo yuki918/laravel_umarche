@@ -22,7 +22,7 @@ Route::get('/dashboard', function () {
     return view('user.dashboard');
 })->middleware(['auth:users'])->name('dashboard');
 
-Route::get("/service-container-test",[LifeCycleTestController::class,"showServiceContainerTest"]);
-Route::get("/service-provider-test",[LifeCycleTestController::class,"showServiceProviderTest"]);
+// Route::get("/service-container-test",[LifeCycleTestController::class,"showServiceContainerTest"]);
+// Route::get("/service-provider-test",[LifeCycleTestController::class,"showServiceProviderTest"]);
 
 require __DIR__.'/auth.php';
