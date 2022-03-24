@@ -82,7 +82,7 @@ class OwnersController extends Controller
         // リダイレクト処理
         return redirect()
           ->route("admin.owners.index")
-          ->with("message","オーナー登録が完了しました");
+          ->with(["message" => "オーナー登録が完了しました","status" => "info"]);
     }
 
     /**
@@ -127,7 +127,7 @@ class OwnersController extends Controller
 
         return redirect()
           ->route("admin.owners.index")
-          ->with("message","オーナー情報を更新しました。");
+          ->with(["message" => "オーナー情報を更新しました。","status" => "info"]);
     }
 
     /**
@@ -138,6 +138,29 @@ class OwnersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        // ソフトデリート
+        Owner::findOrFail($id)->delete();
+        // リダイレクト処理
+        return redirect()
+          ->route("admin.owners.index")
+          ->with(["message" => "オーナー情報を削除しました。","status" => "alert"]);
+    }
+
+    public function expiredOwnerIndex()
+    {
+        // onlyTrashed関数でゴミ箱にあるオーナー情報を取得する
+        $expiredOwners = Owner::onlyTrashed()->get();
+        // compact関数でview側に変数を渡す
+        return view('admin.expired-owners' , compact('expiredOwners'));
+    }
+
+    public function expiredOwnerDestroy($id)
+    {
+        // findOrFailでIDがない場合は、404ページを返す
+        // onlyTrashed関数でゴミ箱にあるオーナー情報を取得して、forceDelete関数で物理的（完全）に削除する
+        Owner::onlyTrashed()->findOrFail($id)->forceDelete();
+        return redirect()
+            ->route('admin.expired-owners.index')
+            ->with(["message" => "オーナー情報を完全に削除しました。","status" => "alert"]);
     }
 }

@@ -33,9 +33,9 @@
                   @endforeach --}}
                   <section class="text-gray-600 body-font">
                     <div class="container mx-auto sm:px-5 sm:py-6">
-                      <x-flash-message status="info" />
+                      <x-flash-message status="session('status')" />
                       <div class="text-right lg:w-2/3 w-full mx-auto">
-                        <a href="/admin/owners/create" class="inline-block text-white bg-blue-500 border-0 py-2 px-8 mb-8 mr-auto focus:outline-none hover:bg-red-600 rounded text-lg">新規登録</a>
+                        <a href="/admin/owners/create" class="inline-block text-white bg-blue-500 border-0 py-2 px-8 mb-8 mr-auto focus:outline-none hover:bg-blue-300 rounded text-lg">新規登録</a>
                       </div>
                       <div class="lg:w-2/3 w-full mx-auto overflow-auto">
                         <table class="w-full table-auto text-left whitespace-no-wrap">
@@ -44,7 +44,8 @@
                               <th class="px-4 py-3 text-center title-font border border-solid border-gray-300 border-opacity-50 tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">名前</th>
                               <th class="px-4 py-3 text-center title-font border border-solid border-gray-300 border-opacity-50 tracking-wider font-medium text-gray-900 text-sm bg-gray-100">メールアドレス</th>
                               <th class="px-4 py-3 text-center title-font border border-solid border-gray-300 border-opacity-50 tracking-wider font-medium text-gray-900 text-sm bg-gray-100">登録日</th>
-                              <th class="px-4 py-3 text-center title-font border border-solid border-gray-300 border-opacity-50 tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">情報の編集</th>
+                              <th class="px-4 py-3 text-center title-font border border-solid border-gray-300 border-opacity-50 tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">編集</th>
+                              <th class="px-4 py-3 text-center title-font border border-solid border-gray-300 border-opacity-50 tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tr rounded-br">削除</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -52,9 +53,16 @@
                               <tr>
                                 <td class="px-4 py-3 border border-solid border-gray-300">{{$owner->name}}</td>
                                 <td class="px-4 py-3 border border-solid border-gray-300">{{$owner->email}}</td>
-                                <td class="px-4 py-3 border border-solid border-gray-300">{{$owner->created_at->diffForHumans()}}</td>
+                                <td class="px-4 py-3 border border-solid border-gray-300">{{$owner->created_at->format('Y年m月d日')}}</td>
                                 <td class="px-4 py-3 border border-solid border-gray-300 text-center">
-                                  <button type="onclick" onclick="location.href='{{route('admin.owners.edit',['owner' => $owner->id])}}'" class="text-white bg-red-500 border-0 py-2 px-4 focus:outline-none hover:bg-red-400 rounded">編集する</button>
+                                  <button type="onclick" onclick="location.href='{{route('admin.owners.edit',['owner' => $owner->id])}}'" class="text-white bg-blue-500 border-0 py-2 px-4 focus:outline-none hover:bg-blue-400 rounded">編集</button>
+                                </td>
+                                <td class="px-4 py-3 border border-solid border-gray-300 text-center">
+                                  <form id="delete_{{$owner->id}}" method="post" action="{{route('admin.owners.destroy',['owner' => $owner->id])}}">
+                                    @csrf
+                                    @method("delete")
+                                    <a data-id="{{$owner->id}}" onclick="deletePost(this)" class="text-white bg-red-500 border-0 py-2 px-4 focus:outline-none hover:bg-red-400 rounded">削除</a>
+                                  </form>
                                 </td>
                               </tr>
                             @endforeach
@@ -67,4 +75,12 @@
           </div>
       </div>
   </div>
+  <script>
+    function deletePost(e) {
+      'use strict';
+      if (confirm('本当に削除してもいいですか?')) {
+        document.getElementById('delete_' + e.dataset.id).submit();
+      }
+    }
+  </script>
 </x-app-layout>
