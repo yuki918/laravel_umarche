@@ -654,6 +654,10 @@ select {
   margin-left: auto;
   margin-right: auto;
 }
+.my-5 {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
 .ml-3 {
   margin-left: 0.75rem;
 }
@@ -782,6 +786,12 @@ select {
 }
 .w-48 {
   width: 12rem;
+}
+.w-7\/5 {
+  width: 140%;
+}
+.w-10\/5 {
+  width: 200%;
 }
 .max-w-6xl {
   max-width: 72rem;
@@ -1570,6 +1580,10 @@ select {
 
   .md\:w-1\/2 {
     width: 50%;
+  }
+
+  .md\:w-full {
+    width: 100%;
   }
 
   .md\:grid-cols-2 {

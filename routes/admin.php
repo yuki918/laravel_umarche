@@ -22,13 +22,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('admin.welcome');
-});
+// Route::get('/', function () {
+//     return view('admin.welcome');
+// });
 
 // CRUDルーティングを一度に行う。adminが認証（ログイン）している場合に表示する
 Route::resource("owners",OwnersController::class)
-                ->middleware('auth:admins');
+                // except関数でCURDのshowメソッドを除外する（adminに新規登録の必要が無いため）
+                ->middleware('auth:admins')->except(["show"]);
 
 // prefixでルーティングをグループ化している
 Route::prefix('expired-owners')->

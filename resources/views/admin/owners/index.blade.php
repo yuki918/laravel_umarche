@@ -38,7 +38,7 @@
                         <a href="/admin/owners/create" class="inline-block text-white bg-blue-500 border-0 py-2 px-8 mb-8 mr-auto focus:outline-none hover:bg-blue-300 rounded text-lg">新規登録</a>
                       </div>
                       <div class="lg:w-2/3 w-full mx-auto overflow-auto">
-                        <table class="w-full table-auto text-left whitespace-no-wrap">
+                        <table class="w-10/5 md:w-full table-auto text-left whitespace-no-wrap">
                           <thead>
                             <tr>
                               <th class="px-4 py-3 text-center title-font border border-solid border-gray-300 border-opacity-50 tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl">名前</th>
@@ -68,8 +68,8 @@
                             @endforeach
                           </tbody>
                         </table>
-                        {{ $owners->links() }}
                       </div>
+                      <div class="lg:w-2/3 w-full my-5 mx-auto">{{ $owners->links() }}</div>
                     </div>
                   </section>
               </div>
