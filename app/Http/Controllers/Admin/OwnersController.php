@@ -6,12 +6,16 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 // エロクアント
 use App\Models\Owner;
+use App\Models\Shop;
 // クエリビルダー
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Hash;
 // パスワードのバリデーション
 use Illuminate\Validation\Rules;
+use Throwable;
+use Illuminate\Support\Facades\Log;
+
 
 class OwnersController extends Controller
 {
@@ -73,12 +77,43 @@ class OwnersController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:owners'],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
+
+        // laravelは大抵のエラーは処理するが、想定外のエラーの場合の処理。
+
+        // 例外処理でのデバック処理。テンプレート。
+        // https://readouble.com/laravel/8.x/ja/errors.html
+        // https://www.plus-one.tech/posts/2020/03/04.html
+        try {
+            DB::transaction(function () use( $request ) {
+                $owner = Owner::create([
+                    'name'     => $request->name,
+                    'email'    => $request->email,
+                    'password' => Hash::make($request->password),
+                ]);
+
+                Shop::create([
+                  'owner_id'    => $owner->id,
+                  'name'        => "店舗名を入力してください",
+                  'information' => '',
+                  'filename'    => '',
+                  'is_selling'  => true,
+                ]);
+            },2);
+        } catch ( Throwable $e ) {
+            // 全てのエラー・例外をキャッチしてログに残す
+            // ログが保存される場所
+            // storage\logs\laravel.log
+            Log::error($e);
+            // フロント（画面）に異常を通知するため例外はそのまま投げる
+            throw $e;
+        }
+
         // リクエストされたオーナー情報を登録する
-        Owner::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+        // Owner::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
         // リダイレクト処理
         return redirect()
           ->route("admin.owners.index")

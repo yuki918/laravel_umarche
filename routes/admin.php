@@ -22,9 +22,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('admin.welcome');
-// });
+Route::get('/', function () {
+    // return view('admin.welcome');
+    return redirect('admin/login');
+});
 
 // CRUDルーティングを一度に行う。adminが認証（ログイン）している場合に表示する
 Route::resource("owners",OwnersController::class)

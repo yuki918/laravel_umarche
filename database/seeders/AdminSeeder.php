@@ -18,8 +18,8 @@ class AdminSeeder extends Seeder
     {
         DB::table("admins")->insert([
             // database\migrations\2022_02_10_071512_create_admins_table.phpを参照する
-            "name" => "test",
-            "email" => "test@gmail.com",
+            "name" => "admin",
+            "email" => "admin@gmail.com",
             "password" => Hash::make("password1234"),
             "created_at" => "2022/01/01 11:11:11",
         ]);
