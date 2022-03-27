@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Owner;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UploadImageRequest;
 use App\Models\Shop;
+use App\Services\imageService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -68,22 +69,25 @@ class ShopController extends Controller
         $imageFile = $request->image;
         // $imageFileがnullでなく、問題なくアップロードできる（isValid関数で確認）場合
         if( !is_null($imageFile) && $imageFile->isValid() ) {
-              // https://readouble.com/laravel/8.x/ja/filesystem.html
-              // 画像のファイル名と「public/storage/shops」というフォルダを自動生成をするテンプレート
-              // Storage::putFile( 'public/shops' , $imageFile );
+              // // https://readouble.com/laravel/8.x/ja/filesystem.html
+              // // 画像のファイル名と「public/storage/shops」というフォルダを自動生成をするテンプレート
+              // // Storage::putFile( 'public/shops' , $imageFile );
 
-              // リサイズしないなら上記の記述で問題ないが、リサイズするので、記述の変更
-              // ランダムな数値_13桁の文字列
-              $fileName        = uniqid( rand().'_' );
-              // 拡張子の取得
-              $extension       = $imageFile->extension();
-              $fileNameToStore = $fileName.'.'.$extension;
-              // phpの画像ライブラリ（laravelの初期値にはない）で画像のリサイズ処理を行う
-              // https://intervention.io/
-              $resizedImage    = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
-              // dd($fileName,$resizedImage);
-              Storage::put( 'public/shops/'.$fileNameToStore , $resizedImage );
+              // // リサイズしないなら上記の記述で問題ないが、リサイズするので、記述の変更
+              // // ランダムな数値_13桁の文字列
+              // $fileName        = uniqid( rand().'_' );
+              // // 拡張子の取得
+              // $extension       = $imageFile->extension();
+              // $fileNameToStore = $fileName.'.'.$extension;
+              // // phpの画像ライブラリ（laravelの初期値にはない）で画像のリサイズ処理を行う
+              // // https://intervention.io/
+              // $resizedImage    = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
+              // // dd($fileName,$resizedImage);
+              // Storage::put( 'public/shops/'.$fileNameToStore , $resizedImage );
               
+              // 上記を全て下記で関数化したため削除する
+              // app\Services\imageService.php
+              $fileNameToStore = ImageService::upload( $imageFile , 'shops' );
           }
           return redirect()->route('owner.shops.index');
     }
