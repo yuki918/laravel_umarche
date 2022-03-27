@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage; 
+use Illuminate\Support\Facades\Storage;
+use InterventionImage;
 
 class ShopController extends Controller
 {
@@ -46,6 +47,7 @@ class ShopController extends Controller
 
     public function index()
     {
+        // phpinfo();
         // ログインしているオーナーのIDの取得
         // $ownerId = Auth::id();
         // Shopモデルのowner_idで、ownerIdを検索して、一致した情報を取得
@@ -65,10 +67,23 @@ class ShopController extends Controller
         $imageFile = $request->image;
         // $imageFileがnullでなく、問題なくアップロードできる（isValid関数で確認）場合
         if( !is_null($imageFile) && $imageFile->isValid() ) {
-            // https://readouble.com/laravel/8.x/ja/filesystem.html
-            // 画像のファイル名と「public/storage/shops」というフォルダを自動生成をするテンプレート
-            Storage::putFile( 'public/shops' , $imageFile );
-            return redirect()->route('owner.shops.index');
-        }
+              // https://readouble.com/laravel/8.x/ja/filesystem.html
+              // 画像のファイル名と「public/storage/shops」というフォルダを自動生成をするテンプレート
+              // Storage::putFile( 'public/shops' , $imageFile );
+
+              // リサイズしないなら上記の記述で問題ないが、リサイズするので、記述の変更
+              // ランダムな数値_13桁の文字列
+              $fileName        = uniqid( rand().'_' );
+              // 拡張子の取得
+              $extension       = $imageFile->extension();
+              $fileNameToStore = $fileName.'.'.$extension;
+              // phpの画像ライブラリ（laravelの初期値にはない）で画像のリサイズ処理を行う
+              // https://intervention.io/
+              $resizedImage    = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
+              // dd($fileName,$resizedImage);
+              Storage::put( 'public/shops/'.$fileNameToStore , $resizedImage );
+              
+          }
+          return redirect()->route('owner.shops.index');
     }
 }
