@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage; 
 
 class ShopController extends Controller
 {
@@ -49,17 +50,25 @@ class ShopController extends Controller
         // $ownerId = Auth::id();
         // Shopモデルのowner_idで、ownerIdを検索して、一致した情報を取得
         $shops = Shop::where( 'owner_id' , Auth::id() )->get();
-
         return view( 'owner.shops.index' , compact('shops') );
     }
 
     public function edit( $id )
     {
-        dd(Shop::findOrFail($id));
+        $shop = Shop::findOrFail($id);
+        return view( 'owner.shops.edit' , compact('shop') );
     }
 
     public function update( Request $request , $id )
     {
-
+        // imageはname属性で設定されている値
+        $imageFile = $request->image;
+        // $imageFileがnullでなく、問題なくアップロードできる（isValid関数で確認）場合
+        if( !is_null($imageFile) && $imageFile->isValid() ) {
+            // https://readouble.com/laravel/8.x/ja/filesystem.html
+            // 画像のファイル名と「public/storage/shops」というフォルダを自動生成をするテンプレート
+            Storage::putFile( 'public/shops' , $imageFile );
+            return redirect()->route('owner.shops.index');
+        }
     }
 }
