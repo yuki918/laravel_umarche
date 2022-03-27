@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UploadImageRequest;
 use App\Models\Shop;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -61,7 +62,7 @@ class ShopController extends Controller
         return view( 'owner.shops.edit' , compact('shop') );
     }
 
-    public function update( Request $request , $id )
+    public function update( UploadImageRequest $request , $id )
     {
         // imageはname属性で設定されている値
         $imageFile = $request->image;
