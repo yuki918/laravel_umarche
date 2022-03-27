@@ -33,15 +33,14 @@ Route::resource("owners",OwnersController::class)
                 ->middleware('auth:admins')->except(["show"]);
 
 // prefixでルーティングをグループ化している
-Route::prefix('expired-owners')->
-    middleware('auth:admins')->group(function() {
-        // Route::get( 'expired-owners/index' ~
-        Route::get( 'index' , [OwnersController::class , 'expiredOwnerIndex'] )
-            ->name("expired-owners.index");
-        // Route::get( 'expired-owners/destroy/{owner}' ~
-        Route::post( 'destroy/{owner}' , [OwnersController::class , 'expiredOwnerDestroy'] )
-            ->name("expired-owners.destroy");
-    });
+Route::prefix('expired-owners')->middleware('auth:admins')->group(function() {
+    // Route::get( 'expired-owners/index' ~
+    Route::get( 'index' , [OwnersController::class , 'expiredOwnerIndex'] )
+        ->name("expired-owners.index");
+    // Route::get( 'expired-owners/destroy/{owner}' ~
+    Route::post( 'destroy/{owner}' , [OwnersController::class , 'expiredOwnerDestroy'] )
+        ->name("expired-owners.destroy");
+});
 
 Route::get('/dashboard', function () {
     return view('admin.dashboard');
