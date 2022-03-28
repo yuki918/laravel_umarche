@@ -65,6 +65,13 @@ class ShopController extends Controller
 
     public function update( UploadImageRequest $request , $id )
     {
+        // updateでは、UploadImageRequesと下記の2つのバリデーションが設定されている
+        $request->validate([
+            'name' => ['required', 'string', 'max:50'],
+            'information' => ['required', 'string', 'max:1000'],
+            'is_selling' => 'required',
+        ]);
+
         // imageはname属性で設定されている値
         $imageFile = $request->image;
         // $imageFileがnullでなく、問題なくアップロードできる（isValid関数で確認）場合
@@ -89,6 +96,19 @@ class ShopController extends Controller
               // app\Services\imageService.php
               $fileNameToStore = ImageService::upload( $imageFile , 'shops' );
           }
-          return redirect()->route('owner.shops.index');
+
+          // 更新された情報の登録
+          $shop = Shop::findOrFail($id);
+          $shop->name = $request->name;
+          $shop->information = $request->information;
+          if( !is_null($imageFile) && $imageFile->isValid() ) {
+            $shop->filename = $fileNameToStore;
+          }
+          $shop->is_selling = $request->is_selling;
+          $shop->save();
+
+          return redirect()
+              ->route('owner.shops.index')
+              ->with(["message" => "店舗情報が更新されました","status" => "info"]);
     }
 }
