@@ -23,7 +23,7 @@
                         </div>
                           <div class="relative my-5">
                               <span class="leading-7 text-sm text-gray-600">店舗の画像</span>
-                              <x-shop-thumbnail :filename="$shop->filename"  />
+                              <x-thumbnail :filename="$shop->filename" type="shops" />
                           </div>
                           <div class="relative my-5">
                               <label for="image" class="leading-7 text-sm text-gray-600">店舗の画像を選択する</label>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Owner;
 
 class image extends Model
 {
@@ -13,4 +14,10 @@ class image extends Model
         'owner_id',
         '$filename'
     ];
+
+    public function owner()
+    {
+        return $this->belongsTo(Owner::class);
+    }
+
 }
