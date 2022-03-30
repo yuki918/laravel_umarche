@@ -15,7 +15,7 @@
                       <div class="p-2 w-full md:w-1/2 m-auto">
                           <div class="relative my-5">
                               <label for="image" class="leading-7 text-sm text-gray-600">店舗の画像を選択する</label>
-                              <input type="file" id="image" name="file[][imagess]" multiple accept="image/png,image/jpg,image/jpeg" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                              <input type="file" id="image" name="files[][image]" multiple accept="image/png,image/jpg,image/jpeg" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                           </div>
                           <div class="flex justify-around p-2 w-full mt-6 my-5">
                               <button type="button" onclick="location.href='{{route('owner.images.index')}}'" class="text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">戻る</button>

@@ -53,6 +53,6 @@ class Owner extends Authenticatable
     public function image()
     {
         // Eloquentリレーション
-        return $this->hasMany(image::class);
+        return $this->hasMany(Image::class);
     }
 }

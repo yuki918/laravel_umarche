@@ -27,7 +27,7 @@ class UploadImageRequest extends FormRequest
             // 画像アップロード時のバリデーション。
             // 画像であり、拡張子がjpg,jpeg,pngのいずれかで、2mbまで
             'image'           => 'image|mimes:jpg,jpeg,png|max:2048',
-            'files.*.imagess' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'files.*.image' => 'image|mimes:jpg,jpeg,png|max:2048',
         ];
     }
 
