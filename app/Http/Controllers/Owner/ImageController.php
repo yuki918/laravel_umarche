@@ -128,6 +128,17 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $image    = Image::findOrFail($id);
+        // 画像の保存場所の取得
+        $filePath = 'public/products/' . $image->filename;
+        // もし画像が存在したら、削除する
+        if( Storage::exists( $filePath ) ) {
+            Storage::delete( $filePath );
+        }
+        // データベースの情報削除
+        Image::findOrFail( $id )->delete();
+        return redirect()
+          ->route("owner.images.index")
+          ->with(["message" => "画像を削除しました。","status" => "alert"]);
     }
 }
