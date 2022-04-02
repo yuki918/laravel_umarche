@@ -816,9 +816,6 @@ select {
 .w-16 {
   width: 4rem;
 }
-.w-3\/9 {
-  width: 30%;
-}
 .w-48\/100 {
   width: 48%;
 }
@@ -1038,6 +1035,10 @@ select {
 .bg-indigo-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(238 242 255 / var(--tw-bg-opacity));
+}
+.bg-gray-300 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
 }
 .bg-opacity-50 {
   --tw-bg-opacity: 0.5;

@@ -17,8 +17,12 @@
                       @foreach( $images as $image )
                         <a class="block w-48/100 md:w-3/9 my-2" href="{{ route( 'owner.images.edit' , [ 'image' => $image->id ] ) }}">
                               <div class="border rounded-md p-4">
-                                  <p class="text-xl">{{ $image->name }}</p>
                                   <x-thumbnail :filename="$image->filename" type="products" />
+                                  @if($image->title)
+                                      <p class="text-center mt-2 text-gray-600">{{ $image->title }}</p>
+                                  @else
+                                      <p class="text-center mt-2 text-gray-600">タイトルがありません</p>
+                                  @endif
                               </div>
                           </a>
                       @endforeach
