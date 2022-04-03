@@ -18,7 +18,7 @@
                           @foreach( $owner->shop->product as $product )
                               <a class="block w-48/100 md:w-3/9 my-2" href="{{ route( 'owner.products.edit' , [ 'product' => $product->id ] ) }}">
                                   <div class="border rounded-md p-4">
-                                      <x-thumbnail :filename="$product->imageFirst->filename" type="products" />
+                                      <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}" type="products" />
                                       <p class="text-center mt-2 text-gray-600">{{ $product->name }}</p>
                                   </div>
                               </a>
