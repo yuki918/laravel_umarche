@@ -15,6 +15,11 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
+            $table->string('name');
+            $table->text('information');
+            $table->unsignedInteger('price');
+            $table->boolean('is_selling');
+            $table->integer('sort_order')->nullable();
             // productsには3つの外部キー制約（FK）を設ける
             // shopが削除された場合は、productも削除される
             $table->foreignId('shop_id')
@@ -24,6 +29,9 @@ class CreateProductsTable extends Migration
             // 2階層目のカテゴリーと商品画像との外部キー制約
             $table->foreignId('secondary_category_id')->constrained();
             $table->foreignId('image01')->nullable()->constrained('images');
+            $table->foreignId('image02')->nullable()->constrained('images');
+            $table->foreignId('image03')->nullable()->constrained('images');
+            $table->foreignId('image04')->nullable()->constrained('images');
             $table->timestamps();
         });
     }

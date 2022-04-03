@@ -13,8 +13,39 @@
                   <form method="post" action="{{ route( 'owner.products.store' ) }}">
                       @csrf
                       <div class="p-2 w-full md:w-1/2 m-auto">
-                          <div class="relative text-center">
-                              <select name="category" id="">
+                          <div class="relative">
+                              <label for="name" class="leading-7 text-sm text-gray-600">商品名　※必須</label>
+                              <input type="text" id="name" required name="name" value="{{ old('name') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          </div>
+                          <div class="relative mt-5">
+                              <label for="information" class="leading-7 text-sm text-gray-600">商品情報</label>
+                              <textarea name="information" id="information" cols="30" rows="5" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">{{ old('information') }}</textarea>
+                          </div>
+                          <div class="relative mt-5">
+                              <label for="price" class="leading-7 text-sm text-gray-600">価格　※必須</label>
+                              <input type="number" id="price" required name="price" value="{{ old('price') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          </div>
+                          <div class="relative mt-5">
+                              <label for="quantity" class="leading-7 text-sm text-gray-600">初期在庫　※必須</label>
+                              <input type="number" id="quantity" required name="quantity" value="{{ old('quantity') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          </div>
+                          <div class="relative mt-5">
+                              <label for="sort_order" class="leading-7 text-sm text-gray-600">表示順</label>
+                              <input type="number" id="sort_order" name="sort_order" value="{{ old('sort_order') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                          </div>
+                          <div class="relative mt-5">
+                              <label for="shop_id" class="leading-7 text-sm text-gray-600">店舗名</label>
+                              <select name="shop_id" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                                  @foreach($shops as $shop)
+                                      <option value="{{ $shop->id }}">
+                                          {{ $shop->name }}
+                                      </option>
+                                  @endforeach
+                              </select>
+                          </div>
+                          <div class="relative mt-5">
+                              <label for="category" class="leading-7 text-sm text-gray-600">カテゴリー名</label>
+                              <select name="category" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
                                   @foreach($categories as $category)
                                       <optgroup label="{{ $category->name }}">
                                           @foreach($category->secondary as $secondary)
@@ -26,10 +57,24 @@
                                   @endforeach
                               </select>
                           </div>
-                          <x-select-image :images="$images" name="image01" />
-                          <x-select-image :images="$images" name="image02" />
-                          <x-select-image :images="$images" name="image03" />
-                          <x-select-image :images="$images" name="image04" />
+                          <div class="relative mt-5">
+                              <p class="leading-7 text-sm text-gray-600">商品の画像</p>
+                              <x-select-image :images="$images" name="image01" />
+                              <x-select-image :images="$images" name="image02" />
+                              <x-select-image :images="$images" name="image03" />
+                              <x-select-image :images="$images" name="image04" />
+                              <x-select-image :images="$images" name="image05" />
+                          </div>
+                          <div class="flex items-center justify-center my-5">
+                              <div class="flex items-center mr-8">
+                                  <input type="radio" name="is_selling" value="1" checked class="mr-2">
+                                  <span>販売中</span>
+                              </div>
+                              <div class="flex items-center">
+                                  <input type="radio" name="is_selling" value="0" class="mr-2">
+                                  <span>停止中</span>
+                              </div>
+                          </div>
                           <div class="flex justify-around p-2 w-full mt-6 my-5">
                               <button type="button" onclick="location.href='{{route('owner.products.index')}}'" class="text-white bg-gray-500 border-0 py-2 px-8 focus:outline-none hover:bg-gray-600 rounded text-lg">戻る</button>
                               <button type="submit" class="text-white bg-blue-500 border-0 py-2 px-8 focus:outline-none hover:bg-blue-400 rounded text-lg">登録</button>
