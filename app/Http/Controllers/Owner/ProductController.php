@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Owner;
 use App\Models\Product;
 use App\Models\Image;
-use App\Models\SecondaryCategory;
+use App\Models\Shop;
+use App\Models\PrimaryCategory;
 
 class ProductController extends Controller
 {
@@ -60,7 +61,15 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        // ログインしているオーナーIDと合致するshopモデルのowner_idのレコードを取得する
+        // 上記で取得した情報の中から、更にidとnameの情報を取得する
+        $shops = Shop::where('owner_id' , Auth::id())->select('id' , 'name')->get();
+        $images = Image::where('owner_id' , Auth::id())
+            ->select('id' , 'title' , 'filename')->orderBy('updated_at' , 'desc')->get();
+        // 「app\Models\PrimaryCategory.php」で設定した関数名をしようしているので、フルネームでは書いていない
+        $categories = PrimaryCategory::with('secondary')->get();
+
+        return view('owner.products.create' , compact('shops' , 'images' , 'categories'));
     }
 
     /**
