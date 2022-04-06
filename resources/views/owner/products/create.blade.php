@@ -28,6 +28,7 @@
                           <div class="relative mt-5">
                               <label for="quantity" class="leading-7 text-sm text-gray-600">初期在庫　※必須</label>
                               <input type="number" id="quantity" required name="quantity" value="{{ old('quantity') }}" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-red-500 focus:bg-white focus:ring-2 focus:ring-red-200 text-base outline-none text-gray-700 py-1 px-3 leading-8 transition-colors duration-200 ease-in-out">
+                              <span class="text-sm">※0から99までの数字で入力してください</span>
                           </div>
                           <div class="relative mt-5">
                               <label for="sort_order" class="leading-7 text-sm text-gray-600">表示順</label>

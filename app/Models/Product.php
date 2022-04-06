@@ -42,6 +42,21 @@ class Product extends Model
         return $this->belongsTo(Image::class , 'image01' , 'id');
     }
 
+    public function imageSecond()
+    {
+        return $this->belongsTo(Image::class , 'image02' , 'id');
+    }
+
+    public function imageThird()
+    {
+        return $this->belongsTo(Image::class , 'image03' , 'id');
+    }
+
+    public function imageFourth()
+    {
+        return $this->belongsTo(Image::class , 'image04' , 'id');
+    }
+
     public function stock()
     {
         return $this->hasMany(Stock::class);

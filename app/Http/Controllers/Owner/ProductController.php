@@ -12,6 +12,7 @@ use App\Models\Stock;
 use App\Models\Image;
 use App\Models\Shop;
 use App\Models\PrimaryCategory;
+use App\Http\Requests\ProductRequest;
 
 class ProductController extends Controller
 {
@@ -80,31 +81,14 @@ class ProductController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        // dd($request);
-        $request->validate([
-            'name'        => ['required', 'string', 'max:50'],
-            'information' => ['required', 'string', 'max:1000'],
-            'price'       => ['required', 'integer'],
-            'quantity'    => ['required', 'integer'],
-            'sort_order'  => ['required', 'nullable'],
-            'shop_id'     => ['required', 'exists:shops,id'],
-            'category'    => ['required', 'exists:secondary_categories,id'],
-            'image01'     => ['nullable', 'exists:images,id'],
-            'image02'     => ['nullable', 'exists:images,id'],
-            'image03'     => ['nullable', 'exists:images,id'],
-            'image04'     => ['nullable', 'exists:images,id'],
-            'is_selling'  => ['required'],
-        ]);
-
         try {
             DB::transaction(function () use( $request ) {
                 $product = Product::create([
                     'name'        => $request->name,
                     'information' => $request->information,
                     'price'       => $request->price,
-                    'quantity'    => $request->quantity,
                     'sort_order'  => $request->sort_order,
                     'shop_id'     => $request->shop_id,
                     'secondary_category_id' => $request->category,
@@ -137,10 +121,10 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
-        //
-    }
+    // public function show($id)
+    // {
+    //     //
+    // }
 
     /**
      * Show the form for editing the specified resource.
@@ -150,7 +134,15 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product  = Product::findOrFail($id);
+        $quantity = Stock::where('product_id' , $product->id)->sum('quantity');
+
+        $shops = Shop::where('owner_id' , Auth::id())->select('id' , 'name')->get();
+        $images = Image::where('owner_id' , Auth::id())
+            ->select('id' , 'title' , 'filename')->orderBy('updated_at' , 'desc')->get();
+        $categories = PrimaryCategory::with('secondary')->get();
+
+        return view('owner.products.edit' , compact('product' , 'quantity' , 'shops' , 'images' , 'categories'));
     }
 
     /**
@@ -160,9 +152,59 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(ProductRequest $request, $id)
     {
-        //
+        $request->validate([
+            'current_quantity' => ['required', 'integer'],
+        ]);
+        $product  = Product::findOrFail($id);
+        $quantity = Stock::where('product_id' , $product->id)->sum('quantity');
+
+        // 在庫数の変更時にユーザーが購入した場合は、在庫数が意図しない数量になるので、それを防ぐ
+        // editの在庫数とpudateの在庫数が同じ場合にのみ処理を実行する
+        if($request->current_quantity !== $quantity) {
+            // 編集中の商品ページにリダイレクト処理をする
+            $id = $request->route()->parameter('product');
+            return redirect()->route('owner.products.edit' , [ 'product' => $id ])
+                    ->with(["message" => "ユーザーが商品を購入しましたことにより、在庫数が変動しました。再登録をお願いします。","status" => "alert"]);
+        } else {
+            try {
+                DB::transaction(function () use( $request , $product ) {
+                  // 更新作業になるので、下記コードは不要になる
+                  // $product = Product::create([
+                    $product->name        = $request->name;
+                    $product->information = $request->information;
+                    $product->price       = $request->price;
+                    $product->sort_order  = $request->sort_order;
+                    $product->shop_id     = $request->shop_id;
+                    $product->secondary_category_id = $request->category;
+                    $product->image01     = $request->image01;
+                    $product->image02     = $request->image02;
+                    $product->image03     = $request->image03;
+                    $product->image04     = $request->image04;
+                    $product->is_selling  = $request->is_selling;
+                    $product->save();
+
+                    if($request->type === '1') {
+                        $newQuantity = $request->quantity;
+                    } elseif($request->type === '2') {
+                      $newQuantity = $request->quantity * -1;
+                    }
+                    Stock::create([
+                        'product_id' => $product->id,
+                        'type'       => $request->type,
+                        'quantity'   => $newQuantity,
+                    ]);
+                },2);
+            } catch ( Throwable $e ) {
+                Log::error($e);
+                throw $e;
+            }
+
+            return redirect()
+                ->route("owner.products.index")
+                ->with(["message" => "商品情報を更新しました","status" => "info"]);
+        }
     }
 
     /**
