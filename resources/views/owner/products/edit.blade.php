@@ -34,11 +34,11 @@
                           </div>
                           <div class="flex items-center justify-center my-5">
                               <div class="flex items-center mr-8">
-                                  <input type="radio" name="type" value="1" checked class="mr-2">
+                                  <input type="radio" name="type" value="{{ \Constants::PRODUCT_LIST['add'] }}" checked class="mr-2">
                                   <span>在庫の追加</span>
                               </div>
                               <div class="flex items-center">
-                                  <input type="radio" name="type" value="2" class="mr-2">
+                                  <input type="radio" name="type" value="{{ \Constants::PRODUCT_LIST['reduce'] }}" class="mr-2">
                                   <span>在庫の削減</span>
                               </div>
                           </div>
