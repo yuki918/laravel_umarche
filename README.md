@@ -7,3 +7,6 @@ sample01.jpg~sample06.jpgとして保存されています。
 「php artisan storage:link」でstorageフォルダにリンク後、
 storage/app/public/prodauctsフォルダ内に保存すると表示されます。
 ※productsフォルダがない場合は、作成してください。
+
+ショップの画像も表示する場合は、
+storage/app/public/shopsフォルダを作成して、画像を保存してください。

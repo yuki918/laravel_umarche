@@ -11,24 +11,24 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="md:flex md:justify-between">
                       <div class="md:w-48/100">
-                        <div class="swiper">
+                        <div class="swiper mb-4 md:mb-0">
                           <div class="swiper-wrapper">
-                            <div class="swiper-slide">
+                            <div class="swiper-slide pt-48/100">
                               @if ($product->imageFirst->filename !== null)
                                   <img src="{{ asset('storage/products/' . $product->imageFirst->filename) }}" alt="">
                               @endif
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide pt-1/2">
                               @if ($product->imageSecond->filename !== null)
                                   <img src="{{ asset('storage/products/' . $product->imageSecond->filename) }}" alt="">
                               @endif
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide pt-1/2">
                               @if ($product->imageThird->filename !== null)
                                   <img src="{{ asset('storage/products/' . $product->imageThird->filename) }}" alt="">
                               @endif
                             </div>
-                            <div class="swiper-slide">
+                            <div class="swiper-slide pt-1/2">
                               @if ($product->imageFourth->filename !== null)
                                   <img src="{{ asset('storage/products/' . $product->imageFourth->filename) }}" alt="">
                               @endif
@@ -61,9 +61,37 @@
                         </div>
                       </div>
                     </div>
+                    <hr class="my-10">
+                    <div class="text-center">
+                      <p>この商品を販売しているショップ</p>
+                      <p>{{ $product->shop->name }}</p>
+                      @if($product->shop->filename)
+                        <img src="{{asset('storage/shops/' . $product->shop->filename)}}" class="w-40 h-40 rounded-full mx-auto object-cover" alt="ショップの画像">
+                      @endif
+                      <a data-micromodal-trigger="modal-1" class="mt-4  inline-block text-white bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded">販売ショップの詳細を見る</a>
+                    </div>
                 </div>
             </div>
         </div>
+    </div>
+    <div class="modal micromodal-slide" id="modal-1" aria-hidden="true">
+      <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+        <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="modal-1-title">
+          <header class="modal__header">
+            <h2 class="text-xl text-gray-700" id="modal-1-title">
+              {{ $product->shop->name }}
+            </h2>
+          </header>
+          <main class="modal__content" id="modal-1-content">
+            <p>
+              {{ $product->shop->information }}
+            </p>
+          </main>
+          <footer class="modal__footer">
+            <button type="button" class="modal__btn" data-micromodal-close aria-label="Close this dialog window">閉じる</button>
+          </footer>
+        </div>
+      </div>
     </div>
     <script src="{{ mix('js/swiper.js') }}"></script>
 </x-app-layout>
