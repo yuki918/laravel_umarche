@@ -25,7 +25,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('owner.welcome');
+    return redirect('owner/login');
 });
 
 // prefixでルーティングをグループ化している
@@ -50,12 +50,12 @@ Route::get('/dashboard', function () {
     return view('owner.dashboard');
 })->middleware(['auth:owners'])->name('dashboard');
 
-Route::get('/register', [RegisteredUserController::class, 'create'])
-                ->middleware('guest')
-                ->name('register');
+// Route::get('/register', [RegisteredUserController::class, 'create'])
+//                 ->middleware('guest')
+//                 ->name('register');
 
-Route::post('/register', [RegisteredUserController::class, 'store'])
-                ->middleware('guest');
+// Route::post('/register', [RegisteredUserController::class, 'store'])
+//                 ->middleware('guest');
 
 Route::get('/login', [AuthenticatedSessionController::class, 'create'])
                 ->middleware('guest')
