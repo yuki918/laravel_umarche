@@ -11,7 +11,7 @@
               <div class="p-6 bg-white border-b border-gray-200">
                   <div class="flex flex-wrap justify-between">
                       @foreach( $products as $product )
-                          <a class="block w-48/100 md:w-3/9 my-2" href="">
+                          <a class="block w-48/100 md:w-3/9 my-2" href="{{ route( 'user.items.show' , [ 'item' => $product->id ] ) }}">
                               <div class="border rounded-md p-4">
                                   <x-thumbnail filename="{{ $product->filename ?? '' }}" type="products" />
                                   <div class="mt-4">
