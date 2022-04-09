@@ -11,7 +11,34 @@
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="md:flex md:justify-between">
                       <div class="md:w-48/100">
-                        <x-thumbnail filename="{{ $product->imageFirst->filename ?? '' }}" type="products" />
+                        <div class="swiper">
+                          <div class="swiper-wrapper">
+                            <div class="swiper-slide">
+                              @if ($product->imageFirst->filename !== null)
+                                  <img src="{{ asset('storage/products/' . $product->imageFirst->filename) }}" alt="">
+                              @endif
+                            </div>
+                            <div class="swiper-slide">
+                              @if ($product->imageSecond->filename !== null)
+                                  <img src="{{ asset('storage/products/' . $product->imageSecond->filename) }}" alt="">
+                              @endif
+                            </div>
+                            <div class="swiper-slide">
+                              @if ($product->imageThird->filename !== null)
+                                  <img src="{{ asset('storage/products/' . $product->imageThird->filename) }}" alt="">
+                              @endif
+                            </div>
+                            <div class="swiper-slide">
+                              @if ($product->imageFourth->filename !== null)
+                                  <img src="{{ asset('storage/products/' . $product->imageFourth->filename) }}" alt="">
+                              @endif
+                            </div>
+                          </div>
+                          <div class="swiper-pagination"></div>
+                          <div class="swiper-button-prev"></div>
+                          <div class="swiper-button-next"></div>
+                          <div class="swiper-scrollbar"></div>
+                        </div>
                       </div>
                       <div class="md:w-48/100">
                         <h2 class="text-sm title-font mb-1 text-gray-500 tracking-widest">{{ $product->category->name }}</h2>
@@ -38,4 +65,5 @@
             </div>
         </div>
     </div>
+    <script src="{{ mix('js/swiper.js') }}"></script>
 </x-app-layout>
