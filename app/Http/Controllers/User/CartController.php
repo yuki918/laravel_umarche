@@ -89,13 +89,13 @@ class CartController extends Controller
         }
 
         // dd($lineItems);
-        dd('test');
+        // dd('test');
 
         // stripe側に秘密鍵と商品情報を渡す
         // 秘密鍵はenvファイルに記述しているので、変数として取得する
         // https://stripe.com/docs/checkout/quickstart
         \Stripe\Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
-        $checkout_session = \Stripe\Checkout\Session::create([
+        $session = \Stripe\Checkout\Session::create([
             'line_items'  => [$lineItems],
             'mode'        => 'payment',
             // 支払いが成功した場合のリダイレクト処理

@@ -51,6 +51,11 @@
                                 </div>
                             </div>
                         @endforeach
+                        <hr class="my-8">
+                        <div class="flex items-end">
+                            <p class="mr-6">合計金額：{{ number_format( $totalPrice ) }}<small class="text-xs">円(税込)</small></p>
+                            <a href="{{ route('user.cart.checkout') }}" class="flex text-white bg-indigo-500 border-0 py-2 px-6 focus:outline-none hover:bg-indigo-600 rounded">購入する</a>
+                        </div>
                     @else
                         <p>カートに商品はありません。</p>
                     @endif
