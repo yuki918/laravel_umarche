@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
 use App\Models\User;
+use App\Models\Stock;
 
 class CartController extends Controller
 {
@@ -61,16 +62,34 @@ class CartController extends Controller
         // https://stripe.com/docs/api/checkout/sessions/create
         $lineItems = [];
         foreach($products as $product) {
-            $lineItem = [
-                'name'        => $product->name,
-                'description' => $product->information,
-                'amount'      => $product->price,
-                'currency'    => 'jpy',
-                'quantity'    => $product->pivot->quantity,
-            ];
-            array_push($lineItems,$lineItem);
+            $quantity = "";
+            $quantity = Stock::where('product_id',$product->id)->sum('quantity');
+            // 商品の在庫数よりも購入数が多い場合は、カートページにリダイレクト処理をする
+            if($product->pivot->quantity > $quantity) {
+                return redirect()->route('user.cart.index');
+            // 購入数よりも商品在庫が多い場合は、商品情報を配列にする
+            } else {
+                $lineItem = [
+                    'name'        => $product->name,
+                    'description' => $product->information,
+                    'amount'      => $product->price,
+                    'currency'    => 'jpy',
+                    'quantity'    => $product->pivot->quantity,
+                ];
+                array_push($lineItems,$lineItem);
+            }
         }
+        // stripeで決済処理をする前に、商品の在庫を減らしておく
+        foreach($products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type'       => \Constants::PRODUCT_LIST['reduce'],
+                'quantity'   => $product->pivot->quantity * -1,
+            ]);
+        }
+
         // dd($lineItems);
+        dd('test');
 
         // stripe側に秘密鍵と商品情報を渡す
         // 秘密鍵はenvファイルに記述しているので、変数として取得する
