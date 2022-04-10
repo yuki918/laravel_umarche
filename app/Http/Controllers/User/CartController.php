@@ -99,12 +99,18 @@ class CartController extends Controller
             'line_items'  => [$lineItems],
             'mode'        => 'payment',
             // 支払いが成功した場合のリダイレクト処理
-            'success_url' => route('user.items.index'),
+            'success_url' => route('user.cart.success'),
             // 支払いがキャンセルした場合のリダイレクト処理
             'cancel_url'  => route('user.cart.index'),
         ]);
         // 公開鍵の取得。秘密鍵と公開鍵の両方の情報を渡すことで、決済することができる
         $publicKey = env('STRIPE_PUBLIC_KEY');
         return view('user.checkout',compact('session','publicKey'));
+    }
+
+    public function success()
+    {
+        Cart::where('user_id',Auth::id())->delete();
+        return redirect()->route('user.items.index');
     }
 }
