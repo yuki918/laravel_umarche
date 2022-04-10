@@ -71,7 +71,7 @@
                       @if($product->shop->filename)
                         <img src="{{asset('storage/shops/' . $product->shop->filename)}}" class="w-40 h-40 rounded-full mx-auto object-cover" alt="ショップの画像">
                       @endif
-                      <a data-micromodal-trigger="modal-1" class="mt-4  inline-block text-white bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded">販売ショップの詳細を見る</a>
+                      <a data-micromodal-trigger="modal-1" class="mt-4 inline-block text-white bg-gray-500 border-0 py-2 px-6 focus:outline-none hover:bg-gray-600 rounded">販売ショップの詳細を見る</a>
                     </div>
                 </div>
             </div>
