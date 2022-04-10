@@ -6,9 +6,25 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Cart;
+use App\Models\User;
 
 class CartController extends Controller
 {
+
+    public function index()
+    {
+        $user       = User::findOrFail(Auth::id());
+        $products   = $user->products;
+        $totalPrice = 0;
+
+        // 全商品の合計金額の算出
+        foreach($products as $product) {
+            $totalPrice = $product->price * $product->pivot->quantity;
+        }
+        // dd($product,$totalPrice);
+        return view('user.cart' , compact('products','totalPrice'));
+    }
+
     public function add(Request $request)
     {
         // カートモデルのproduct_idから取得したproduct_idに一致する情報の取得
@@ -27,6 +43,6 @@ class CartController extends Controller
               'quantity'   => $request->quantity,
           ]);
         }
-        dd('test');
+        return redirect()->route('user.cart');
     }
 }
