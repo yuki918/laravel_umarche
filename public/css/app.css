@@ -1096,10 +1096,6 @@ select {
 .fill-current {
   fill: currentColor;
 }
-.object-contain {
-  -o-object-fit: contain;
-     object-fit: contain;
-}
 .object-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -1576,6 +1572,7 @@ select {
 .swiper {
   /* width: 600px;
   height: 300px; */
+  height: auto;
 }
 .hover\:border-gray-300:hover {
   --tw-border-opacity: 1;
