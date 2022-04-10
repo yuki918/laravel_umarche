@@ -101,7 +101,7 @@ class CartController extends Controller
             // 支払いが成功した場合のリダイレクト処理
             'success_url' => route('user.cart.success'),
             // 支払いがキャンセルした場合のリダイレクト処理
-            'cancel_url'  => route('user.cart.index'),
+            'cancel_url'  => route('user.cart.cancel'),
         ]);
         // 公開鍵の取得。秘密鍵と公開鍵の両方の情報を渡すことで、決済することができる
         $publicKey = env('STRIPE_PUBLIC_KEY');
@@ -112,5 +112,19 @@ class CartController extends Controller
     {
         Cart::where('user_id',Auth::id())->delete();
         return redirect()->route('user.items.index');
+    }
+
+    public function cancel()
+    {
+        $user = User::findOrFail(Auth::id());
+        $products = $user->products;
+        foreach($products as $product) {
+            Stock::create([
+                'product_id' => $product->id,
+                'type'       => \Constants::PRODUCT_LIST['add'],
+                'quantity'   => $product->pivot->quantity,
+            ]);
+        }
+        return redirect()->route('user.cart.index');
     }
 }
