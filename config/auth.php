@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'web',
+        'guard' => 'users',
         'passwords' => 'users',
     ],
 
@@ -40,6 +40,21 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+
+        'admins' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+        
+        'owners' => [
+            'driver' => 'session',
+            'provider' => 'owners',
+        ],
+
+        'users' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
     ],
 
     /*
@@ -60,6 +75,18 @@ return [
     */
 
     'providers' => [
+        "admins" => [
+            "driver" => "eloquent",
+            // モデルクラス：App\Models\Admin.php
+            "model" => App\Models\Admin::class,
+        ],
+
+        "owners" => [
+            "driver" => "eloquent",
+            // モデルクラス：App\Models\Owner.php
+            "model" => App\Models\Owner::class,
+        ],
+
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
@@ -87,6 +114,24 @@ return [
     */
 
     'passwords' => [
+        'admin' => [
+            // 上記の配列で作成した名前
+            'provider' => 'admins',
+            // database\migrations\2022_02_10_072839_create_admin_password_resets.php
+            'table' => 'admin_password_resets',
+            // 期限　60日間
+            'expire' => 60,
+            // ログイン失敗時の制限　60秒
+            'throttle' => 60,
+        ],
+
+        'owners' => [
+            'provider' => 'owners',
+            'table' => 'owner_password_resets',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        
         'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
