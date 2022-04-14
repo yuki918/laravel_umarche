@@ -20,7 +20,7 @@ class ProductController extends Controller
     public function __construct()
     {
         $this->middleware('auth:owners');
-        $this->middleware( function( $request , $next ){
+        $this->middleware( function( $request , $next ) {
             $id = $request->route()->parameter('product');
             if( !is_null( $id ) ) {
                 $productsOwnerId = Product::findOrFail($id)->shop->owner->id;

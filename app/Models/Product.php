@@ -93,4 +93,51 @@ class Product extends Model
                     ,'products.information', 'secondary_categories.name as category'
                     ,'image01.filename as filename');
     }
+
+    public function scopeSortOrder($query , $sortOrder)
+    {
+        // sortOrderに値がない場合（初期値）、若しくはrecommendが選択されいる場合
+        if($sortOrder === null || $sortOrder === \Constants::SORT_ORDER['recommend']) {
+            return $query->orderBy('sort_order','asc');
+        }
+        if($sortOrder === \Constants::SORT_ORDER['order']) {
+            return $query->orderBy('products.created_at','asc');
+        }
+        if($sortOrder === \Constants::SORT_ORDER['later']) {
+            return $query->orderBy('products.created_at','desc');
+        }
+        if($sortOrder === \Constants::SORT_ORDER['lowerPrice']) {
+          return $query->orderBy('price','asc');
+        }
+        if($sortOrder === \Constants::SORT_ORDER['higherPrice']) {
+            return $query->orderBy('price','desc');
+        }
+    }
+
+    public function scopeSelectCategory($query , $categoryId)
+    {
+        if($categoryId !== '0') {
+            return $query->where('secondary_category_id' , $categoryId);
+        } else {
+            return;
+        }
+    }
+
+    public function scopeSearchKeyword($query , $keyword)
+    {
+        if(!is_null($keyword)) {
+            //全角スペースを半角に
+            $spaceConvert = mb_convert_kana($keyword,'s');
+            // preg_split関数で空白ごとの文字を配列として取得する
+            // https://www.php.net/manual/ja/function.preg-split.php
+            $keywords = preg_split('/[\s]+/', $spaceConvert,-1,PREG_SPLIT_NO_EMPTY);
+            foreach($keywords as $word) {
+                // あいまい検索
+                $query->where('products.name','like','%'.$word.'%');
+            }
+            return $query; 
+        } else {
+            return;
+        }
+    }
 }
