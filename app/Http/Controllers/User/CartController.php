@@ -5,9 +5,11 @@ namespace App\Http\Controllers\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Services\CartService;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Stock;
+use App\Jobs\SendThanksMail;
 
 class CartController extends Controller
 {
@@ -55,7 +57,16 @@ class CartController extends Controller
 
     public function checkout()
     {
-        $user = User::findOrFail(Auth::id());
+
+        // 自動送信用の情報を取得
+        // ユーザーがカートに入れた商品情報を取得する
+        $items    = Cart::where('user_id' , Auth::id())->get();
+        $products = CartService::getItemsInCart($items);
+        $user     = User::findOrFail(Auth::id());
+
+        SendThanksMail::dispatch($products , $user);
+        dd($products);
+
         $products = $user->products;
 
         // stripeに情報を渡すために、stripe用の命名規則で情報を渡す
