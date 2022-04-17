@@ -4,9 +4,13 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Stock;
+use App\Models\PrimaryCategory;
+use App\Mail\TestMail;
+use App\Jobs\SendThanksMail;
 
 class ItemController extends Controller
 {
@@ -14,31 +18,38 @@ class ItemController extends Controller
     public function __construct()
     {
         $this->middleware('auth:users');
+
+        $this->middleware( function( $request , $next ) {
+            $id = $request->route()->parameter('item');
+            if( !is_null( $id ) ) {
+                $itemId = Product::availableItems()->where('products.id' , $id)->exists();
+                if( !$itemId ) {
+                    abort(404);
+                }
+            }
+            return $next( $request );
+        });
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $stocks = DB::table('t_stocks')
-            ->select('product_id',DB::raw('sum(quantity) as quantity'))
-            ->groupBy('product_id')
-            ->having('quantity','>=',1);
-        $products = DB::table('products')
-            ->joinSub($stocks,'stock',function($join) {
-                $join->on('products.id','=','stock.product_id');
-            })
-            ->join('shops','products.shop_id','=','shops.id')
-            ->join('secondary_categories','products.secondary_category_id', '=','secondary_categories.id')
-            ->join('images as image01', 'products.image01', '=', 'image01.id')
-            ->where('shops.is_selling',true)
-            ->where('products.is_selling',true)
-            ->select('products.id as id', 'products.name as name', 'products.price'
-                    ,'products.sort_order as sort_order'
-                    ,'products.information', 'secondary_categories.name as category'
-                    ,'image01.filename as filename')
-            ->get();
+        // メール設定(動機的に送信)
+        // Mail::to('test@sample.com')->send(new TestMail());
 
+        // メール設定(jobを使って非同期的に送信する)
+        // SendThanksMail::dispatch();
+
+        // dd($request);
+        $products = Product::availableItems()
+            // app\Models\Product.phpで定義しているscopeSortOrder、scopeSelectCategory、scopeSearchKeyword
+            // Null合体演算子を用いて、値がない場合は（つまりは初期値）値を補完している
+            ->selectCategory($request->category ?? '0')
+            ->searchKeyword($request->keyword)
+            ->sortOrder($request->sort)
+            ->paginate($request->pagination ?? '20');
         // dd($stocks,$products);
-        return view('user.index',compact('products'));
+        $categories = PrimaryCategory::with('secondary')->get();
+        return view('user.index',compact('products' , 'categories'));
     }
 
     public function show($id)
