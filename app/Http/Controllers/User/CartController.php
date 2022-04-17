@@ -10,6 +10,7 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Stock;
 use App\Jobs\SendThanksMail;
+use App\Jobs\SendOrderedMail;
 
 class CartController extends Controller
 {
@@ -58,15 +59,7 @@ class CartController extends Controller
     public function checkout()
     {
 
-        // 自動送信用の情報を取得
-        // ユーザーがカートに入れた商品情報を取得する
-        $items    = Cart::where('user_id' , Auth::id())->get();
-        $products = CartService::getItemsInCart($items);
-        $user     = User::findOrFail(Auth::id());
-
-        SendThanksMail::dispatch($products , $user);
-        dd($products);
-
+        $user = User::findOrFail(Auth::id());
         $products = $user->products;
 
         // stripeに情報を渡すために、stripe用の命名規則で情報を渡す
@@ -121,6 +114,20 @@ class CartController extends Controller
 
     public function success()
     {
+        // 自動送信用の情報を取得
+        // ユーザーがカートに入れた商品情報を取得する
+        $items    = Cart::where('user_id' , Auth::id())->get();
+        $products = CartService::getItemsInCart($items);
+        $user     = User::findOrFail(Auth::id());
+
+        // ユーザー用自動返信
+        SendThanksMail::dispatch($products , $user);
+        // オーナー用自動返信（複数のショップから購入するかの世があるので、ループを回す）
+        foreach($products as $product) {
+            SendOrderedMail::dispatch($product , $user);
+        }
+        // dd($products);
+
         Cart::where('user_id',Auth::id())->delete();
         return redirect()->route('user.items.index');
     }
