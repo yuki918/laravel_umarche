@@ -6,6 +6,6 @@
         <li>商品名：{{ $product['name'] }}</li>
         <li>商品金額：{{ number_format($product['price']) }}円</li>
         <li>商品数：{{ $product['quantity'] }}</li>
-        <li>商品金額：{{ number_format($product['price']) * $product['quantity'] }}円</li>
+        <li>商品金額：{{ number_format($product['price'] * $product['quantity']) }}円</li>
     </ul>
 @endforeach

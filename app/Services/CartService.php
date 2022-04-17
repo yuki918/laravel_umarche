@@ -2,12 +2,12 @@
 
 namespace App\Services;
 
-use App\Models\product;
+use App\Models\Product;
 use App\Models\Cart;
 
 class CartService
 {
-    public function getItemsInCart($items)
+    public static function getItemsInCart($items)
     {
         $products = [];
         // dd($items);
